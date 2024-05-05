@@ -3,12 +3,13 @@ package message
 import (
 	"fmt"
 
+	"github.com/OPC-16/CLI-messaging/api"
 	"github.com/OPC-16/CLI-messaging/user"
 )
 
 func SendMessage(sender, receiver int, msg string) {
     if msg == "" {
-        // then do cat fact api call and put that string in msg var
+        msg = api.GetRandomCatFact()
     }
 
     senderUser := user.FetchUser(sender)
@@ -18,13 +19,13 @@ func SendMessage(sender, receiver int, msg string) {
         senderUser.AddSentMessage(msg)
         receiverUser.AddReceivedMessage(msg)
 
-        fmt.Printf("User %d received message from User %d: %s\n", receiver, sender, msg)
+        fmt.Printf("User %d received message from User %d: \"%s\"\n", receiver, sender, msg)
     }
 }
 
 func BroadcastMessage(msg string) {
     if msg == "" {
-        // then do cat fact api call and put that string in msg var
+        msg = api.GetRandomCatFact()
     }
 
     allUsers := user.FetchAllUsers()
@@ -32,7 +33,7 @@ func BroadcastMessage(msg string) {
         singleUser.AddReceivedMessage(msg)
     }
 
-    fmt.Printf("Message broadcasted to all users: %s\n", msg)
+    fmt.Printf("Message broadcasted to all users: \"%s\"\n", msg)
 }
 
 func LogMessages(userId int) {
