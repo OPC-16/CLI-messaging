@@ -13,13 +13,15 @@ import (
 func Start(in io.Reader, out io.Writer) {
     scanner := bufio.NewScanner(in)
 
+    user.CreateUsers()
+
     fmt.Println("1. Send Message between two users")
     fmt.Println("2. Broadcast Message to all users")
     fmt.Println("3. View Message Log of a user")
     fmt.Println("4. Exit")
 
     for {
-        io.WriteString(out, "Enter your choice: ")
+        io.WriteString(out, "\nEnter your choice: ")
         scanned := scanner.Scan()
         if !scanned {
             return
@@ -57,10 +59,10 @@ func Start(in io.Reader, out io.Writer) {
                 message.LogMessages(userID)
 
             case "4":
-                io.WriteString(out, "Printing all users' Message logs and exiting the application.")
+                io.WriteString(out, "Printing all users' Message logs and exiting the application.\n")
 
                 allUsers := user.FetchAllUsers()
-                for _, user := range *allUsers {
+                for _, user := range allUsers {
                     message.LogMessages(user.UserID)
                 }
 

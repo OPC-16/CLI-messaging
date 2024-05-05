@@ -15,8 +15,8 @@ func SendMessage(sender, receiver int, msg string) {
     receiverUser := user.FetchUser(receiver)
 
     if senderUser != nil && receiverUser != nil {
-        senderUser.SentMessagesLog = append(senderUser.SentMessagesLog, msg)
-        receiverUser.ReceivedMessagesLog = append(receiverUser.ReceivedMessagesLog, msg)
+        senderUser.AddSentMessage(msg)
+        receiverUser.AddReceivedMessage(msg)
 
         fmt.Printf("User %d received message from User %d: %s\n", receiver, sender, msg)
     }
@@ -28,27 +28,23 @@ func BroadcastMessage(msg string) {
     }
 
     allUsers := user.FetchAllUsers()
-    for _, user := range *allUsers {
-        user.ReceivedMessagesLog = append(user.ReceivedMessagesLog, msg)
+    for _, singleUser := range allUsers {
+        singleUser.AddReceivedMessage(msg)
     }
 
     fmt.Printf("Message broadcasted to all users: %s\n", msg)
 }
 
 func LogMessages(userId int) {
-    user := user.FetchUser(userId)
+    u := user.FetchUser(userId)
 
-    if user != nil {
-        fmt.Printf("Fetching Message logs of %s (UserID: %d) ...\n", user.Username, user.UserID)
+    if u != nil {
+        fmt.Printf("\nFetching Message logs of %s (UserID: %d) ...\n", u.Username, u.UserID)
 
         fmt.Println("Sent Messages are:")
-        for _, msg := range user.SentMessagesLog {
-            fmt.Println(msg)
-        }
+        u.PrintSentMessages()
 
         fmt.Println("Received Messages are:")
-        for _, msg := range user.ReceivedMessagesLog {
-            fmt.Println(msg)
-        }
+        u.PrintReceivedMessages()
     }
 }
